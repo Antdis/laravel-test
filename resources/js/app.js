@@ -27,21 +27,17 @@ var app = new Vue({
             return data;
         }
     },
-    created(){
-        this.posts = [{"id":1,"img":"\/images\/posts\/1.png","text":"Post 1","user":{"id":1,"personaname":"Admin User","avatarfull":"https:\/\/steamcdn-a.akamaihd.net\/steamcommunity\/public\/images\/avatars\/96\/967871835afdb29f131325125d4395d55386c07a_full.jpg","time_created":"2022-04-19 16:43:44","time_updated":"2022-04-19 16:43:44"},"time_created":"2022-04-19 16:43:44","time_updated":"2022-04-19 16:43:44"},{"id":2,"img":"\/images\/posts\/2.png","text":"Post 2","user":{"id":1,"personaname":"Admin User","avatarfull":"https:\/\/steamcdn-a.akamaihd.net\/steamcommunity\/public\/images\/avatars\/96\/967871835afdb29f131325125d4395d55386c07a_full.jpg","time_created":"2022-04-19 16:43:44","time_updated":"2022-04-19 16:43:44"},"time_created":"2022-04-19 16:43:44","time_updated":"2022-04-19 16:43:44"}];
-        this.boosterpacks = [{"id":1,"price":5},{"id":2,"price":20},{"id":3,"price":50}];
-    //     var self = this
-    //     axios
-    //         .get('/main_page/get_all_posts')
-    //         .then(function (response) {
-    //             self.posts = response.data.posts;
-    //         })
-    //
-    //     axios
-    //         .get('/main_page/get_boosterpacks')
-    //         .then(function (response) {
-    //             self.boosterpacks = response.data.boosterpacks;
-    //         })
+    created() {
+        axios.get('/posts')
+            .then(response => {
+                this.posts = response.data.posts;
+            })
+
+        axios
+            .get('/boosterPacks')
+            .then(response => {
+                this.boosterpacks = response.data.boosterPacks;
+            })
     },
     methods: {
         logout: function () {
