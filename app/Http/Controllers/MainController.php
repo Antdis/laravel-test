@@ -19,11 +19,6 @@ class MainController extends Controller
         return view('welcome');
     }
 
-    public function posts(): JsonResponse
-    {
-        return response()->json(['posts' => Post::all()]);
-    }
-
     public function boosterPacks(): JsonResponse
     {
         return response()->json(['boosterPacks' => BoosterPack::all()]);
@@ -79,11 +74,6 @@ class MainController extends Controller
     public function add_money()
     {
         // TODO: task 4, пополнение баланса
-    }
-
-    public function get_post(int $post_id)
-    {
-        // TODO получения поста по id
     }
 
     public function buy_boosterpack()

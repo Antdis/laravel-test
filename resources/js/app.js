@@ -107,15 +107,13 @@ var app = new Vue({
             }
         },
         openPost: function (id) {
-            var self = this;
             axios
-                .get('/main_page/get_post/' + id)
-                .then(function (response) {
-                    self.post = response.data.post;
-                    if (self.post) {
-                        setTimeout(function () {
-                            $('#postModal').modal('show');
-                        }, 500);
+                .get(`/posts/${id}`)
+                .then(response => {
+                    this.post = response.data.data;
+
+                    if (this.post) {
+                        setTimeout(() => $('#postModal').modal('show'), 500);
                     }
                 })
         },
