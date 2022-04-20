@@ -22,6 +22,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/posts/{post}/comment', [PostController::class, 'comment']);
     Route::post('/like', [PostController::class, 'like']);
     Route::post('/addMoney', [MainController::class, 'addMoney']);
+    Route::post('/buyBooster/{boosterPack}', [MainController::class, 'buyBooster']);
 });
 
 Route::get('/boosterPacks', [MainController::class, 'boosterPacks']);

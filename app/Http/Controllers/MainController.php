@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\BoosterPack;
-use App\Models\Post;
 use App\Models\User;
+use App\Services\BoosterPackService;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class MainController extends Controller
 {
@@ -72,14 +73,21 @@ class MainController extends Controller
         return response('');
     }
 
-    public function buy_boosterpack()
+    /**
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function buyBooster(BoosterPack $boosterPack, BoosterPackService $boosterPackService): JsonResponse
     {
-        // Check user is authorize
-//        if (!User_model::is_logged()) {
-//            return $this->response_error(System\Libraries\Core::RESPONSE_GENERIC_NEED_AUTH);
-//        }
+        try {
+            /** @var User $user */
+            $user = auth()->user();
 
-        // TODO: task 5, покупка и открытие бустерпака
+            $item = $boosterPackService->open($boosterPack, $user);
+        } catch (\Exception $e) {
+            throw ValidationException::withMessages(['buy' => $e->getMessage()]);
+        }
+
+        return \response()->json(['amount' => $item->price ?? 0]);
     }
 
 

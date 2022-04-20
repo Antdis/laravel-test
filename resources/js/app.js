@@ -118,18 +118,20 @@ var app = new Vue({
             }
         },
         buyPack: function (id) {
-            var self = this;
-            var pack = new FormData();
-            pack.append('id', id);
-            axios.post('/main_page/buy_boosterpack', pack)
-                .then(function (response) {
-                    self.amount = response.data.amount
-                    if (self.amount !== 0) {
-                        setTimeout(function () {
-                            $('#amountModal').modal('show');
-                        }, 500);
+            axios.post(`/buyBooster/${id}`)
+                .then(response => {
+                    let {amount} = response.data
+                    if (amount !== 0) {
+                        alert(`You won ${amount} likes`);
                     }
-                })
+                }).catch(error => this.showError(error.response.data));
+        },
+
+        showError(response) {
+            let message = '';
+
+            Object.values(response.errors).forEach(element => message += element.join(' '))
+            alert(message);
         }
     }
 });
