@@ -4,8 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\BoosterPack;
 use App\Models\Post;
+use App\Models\User;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 
 class MainController extends Controller
 {
@@ -24,14 +29,36 @@ class MainController extends Controller
         return response()->json(['boosterPacks' => BoosterPack::all()]);
     }
 
-    public function login()
+    public function login(Request $request): Response
     {
-        // TODO: task 1, аутентификация
+        $validated = $request->validate([
+            'login'    => ['required', 'email:strict'],
+            'password' => ['required'],
+        ]);
+
+        $user = User::query()
+            ->where('email', $validated['login'])
+            ->where('password', $validated['password'])
+            ->first();
+
+        if (!$user) {
+            return response('', 400);
+        }
+
+        Auth::login($user);
+
+        return response('');
     }
 
-    public function logout()
+    public function logout(Request $request): RedirectResponse
     {
-        // TODO: task 1, аутентификация
+        Auth::logout();
+
+        $request->session()->invalidate();
+
+        $request->session()->regenerateToken();
+
+        return redirect('/');
     }
 
     public function comment()

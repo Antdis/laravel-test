@@ -44,28 +44,32 @@ var app = new Vue({
             console.log('logout');
         },
         logIn: function () {
-            var self = this;
-            if (self.login === '') {
-                self.invalidLogin = true
-            } else if (self.pass === '') {
-                self.invalidLogin = false
-                self.invalidPass = true
+            if (this.login === '') {
+                this.invalidLogin = true
+            } else if (this.pass === '') {
+                this.invalidLogin = false
+                this.invalidPass = true
             } else {
-                self.invalidLogin = false
-                self.invalidPass = false
+                this.invalidLogin = false
+                this.invalidPass = false
 
-                form = new FormData();
-                form.append("login", self.login);
-                form.append("password", self.pass);
+                let form = new FormData();
+                form.append("login", this.login);
+                form.append("password", this.pass);
 
-                axios.post('/main_page/login', form)
-                    .then(function (response) {
-                        if (response.data.user) {
-                            location.reload();
+                axios.post('/login', form)
+                    .then(() => location.reload())
+                    .catch((error) => {
+                        let {data, status} = error.response
+
+                        // Validation Exception
+                        if (status === 422) {
+                            this.invalidLogin = data && data.errors.login
+                            this.invalidPass = data && data.errors.password
+                        } else {
+                            this.invalidLogin = true
+                            this.invalidPass = true
                         }
-                        setTimeout(function () {
-                            $('#loginModal').modal('hide');
-                        }, 500);
                     })
             }
         },

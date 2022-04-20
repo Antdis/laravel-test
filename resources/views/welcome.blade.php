@@ -21,13 +21,13 @@
             <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
                 <li class="nav-item">
                     @auth
-                        <a href="/main_page/logout" class="btn btn-primary my-2 my-sm-0"
+                        <a href="{{ route('logout') }}" class="btn btn-primary my-2 my-sm-0"
                            data-target="#loginModal">Log out {{ auth()->user()->personaname}}
                         </a>
                     @endauth
                     @guest
-                        <button type="button" class="btn btn-success my-2 my-sm-0" type="submit" data-toggle="modal"
-                                data-target="#loginModal">Log IN
+                        <button type="button" class="btn btn-success my-2 my-sm-0" data-toggle="modal"
+                                data-target="#loginModal" @click="logIn">Log IN
                         </button>
                     @endguest
                 </li>
