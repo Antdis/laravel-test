@@ -11,6 +11,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class MainController extends Controller
 {
@@ -56,24 +57,19 @@ class MainController extends Controller
         return redirect('/');
     }
 
-    public function comment()
+    public function addMoney(Request $request): Response
     {
-        // TODO: task 2, комментирование
-    }
+        $request->validate(['sum' => ['required', 'numeric', 'min:1']]);
+        $sum = (float) $request->input('sum');
 
-    public function like_comment(int $comment_id)
-    {
-        // TODO: task 3, лайк комментария
-    }
+        $user = auth()->user();
 
-    public function like_post(int $post_id)
-    {
-        // TODO: task 3, лайк поста
-    }
+        User::where('id', $user->id)->update([
+            'wallet_balance'        => DB::raw("wallet_balance + $sum"),
+            'wallet_total_refilled' => DB::raw("wallet_total_refilled + $sum"),
+        ]);
 
-    public function add_money()
-    {
-        // TODO: task 4, пополнение баланса
+        return response('');
     }
 
     public function buy_boosterpack()

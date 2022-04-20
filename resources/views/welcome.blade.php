@@ -41,7 +41,7 @@
                 <li class="nav-item">
                     @auth
                         <a href="" role="button">
-                            Likes:
+                            Likes: {{ auth()->user()->likes_balance }}
                         </a>
                     @endauth
                 </li>

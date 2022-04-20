@@ -108,19 +108,13 @@ var app = new Vue({
 
         },
         refill: function () {
-            var self = this;
-            if (self.addSum === 0) {
-                self.invalidSum = true
+            if (this.addSum === 0) {
+                this.invalidSum = true
             } else {
-                self.invalidSum = false
-                sum = new FormData();
-                sum.append('sum', self.addSum);
-                axios.post('/main_page/add_money', sum)
-                    .then(function (response) {
-                        setTimeout(function () {
-                            $('#addModal').modal('hide');
-                        }, 500);
-                    })
+                this.invalidSum = false
+
+                axios.post('/addMoney', {sum: this.addSum})
+                    .then(() => setTimeout(() => $('#addModal').modal('hide'), 500))
             }
         },
         buyPack: function (id) {
