@@ -178,7 +178,7 @@
                                     <span>@{{likes}}</span>
                                 </div>
                             </div>
-                            <p class="card-text" v-for="comment in post.coments">
+                            <p class="card-text" v-for="comment in post.comments">
                                 @{{comment.user.personaname + ' - '}}
                                 <small class="text-muted">@{{comment.text}}</small>
                                 <a role="button" @click="addLike('comment', comment.id)">

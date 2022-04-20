@@ -18,6 +18,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [MainController::class, 'index']);
 Route::resource('/posts', PostController::class)->only(['index', 'show']);
 
+Route::post('/posts/{post}/comment', [PostController::class, 'comment'])->middleware('auth');
+Route::post('/like', [PostController::class, 'like'])->middleware('auth');
+
 Route::get('/boosterPacks', [MainController::class, 'boosterPacks']);
 
 Route::post('/login', [MainController::class, 'login']);

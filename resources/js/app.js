@@ -73,21 +73,38 @@ var app = new Vue({
                     })
             }
         },
+        openPost: function (id) {
+            axios
+                .get(`/posts/${id}`)
+                .then(response => {
+                    this.post = response.data.post;
+
+                    if (this.post) {
+                        setTimeout(() => $('#postModal').modal('show'), 500);
+                    }
+                })
+        },
         addComment: function (id) {
-            var self = this;
-            if (self.commentText) {
+            if (this.commentText) {
+                let comment = new FormData();
+                comment.append('commentText', this.commentText);
 
-                var comment = new FormData();
-                comment.append('postId', id);
-                comment.append('commentText', self.commentText);
-
-                axios.post(
-                    '/main_page/comment',
-                    comment
-                ).then(function () {
-
-                });
+                axios.post(`/posts/${id}/comment`, {commentText: this.commentText})
+                    .then(response => {
+                        this.post = response.data.post;
+                    });
             }
+        },
+        addLike: function (type, id) {
+            axios.post('/like', {type, id})
+                .then(response => {
+                    let {post} = response.data;
+                    console.log(post);
+                    let postIndex = this.posts.findIndex(post => post.id === id);
+                    console.log(postIndex);
+                    this.post = post
+                    this.posts[postIndex] = this.post
+                })
 
         },
         refill: function () {
@@ -105,27 +122,6 @@ var app = new Vue({
                         }, 500);
                     })
             }
-        },
-        openPost: function (id) {
-            axios
-                .get(`/posts/${id}`)
-                .then(response => {
-                    this.post = response.data.data;
-
-                    if (this.post) {
-                        setTimeout(() => $('#postModal').modal('show'), 500);
-                    }
-                })
-        },
-        addLike: function (type, id) {
-            var self = this;
-            const url = '/main_page/like_' + type + '/' + id;
-            axios
-                .get(url)
-                .then(function (response) {
-                    self.likes = response.data.likes;
-                })
-
         },
         buyPack: function (id) {
             var self = this;
