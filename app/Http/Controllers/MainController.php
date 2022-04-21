@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\AnalyticAction;
+use App\Events\UserBalanceChangedEvent;
 use App\Models\BoosterPack;
 use App\Models\User;
 use App\Services\BoosterPackService;
@@ -63,12 +65,15 @@ class MainController extends Controller
         $request->validate(['sum' => ['required', 'numeric', 'min:1']]);
         $sum = (float) $request->input('sum');
 
+        /** @var User $user */
         $user = auth()->user();
 
         User::where('id', $user->id)->update([
             'wallet_balance'        => DB::raw("wallet_balance + $sum"),
             'wallet_total_refilled' => DB::raw("wallet_total_refilled + $sum"),
         ]);
+
+        UserBalanceChangedEvent::dispatch($user, $user, AnalyticAction::Wallet, $sum);
 
         return response('');
     }

@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Enums\AnalyticAction;
+use App\Enums\AnalyticObject;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -11,9 +13,9 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property int                             $id
  * @property int                             $user_id
- * @property string                          $object
- * @property string                          $action
- * @property int                             $object_id
+ * @property string                          $object    String describes the object with which it is carried interaction (boosterpack, wallet, etc)
+ * @property string                          $action    Action with object (buy boosterpack, add money to wallet ...)
+ * @property int                             $object_id ID with which user interaction
  * @property int                             $amount
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
@@ -33,4 +35,9 @@ use Illuminate\Database\Eloquent\Model;
 class Analytics extends Model
 {
     use HasFactory;
+
+    protected $casts = [
+        'action' => AnalyticAction::class,
+        'object' => AnalyticObject::class,
+    ];
 }

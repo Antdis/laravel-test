@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use App\Enums\AnalyticAction;
+use App\Events\UserBalanceChangedEvent;
 use App\Exceptions\BoosterPackException;
 use App\Models\BoosterPack;
 use App\Models\Item;
@@ -44,6 +46,8 @@ class BoosterPackService
                 throw new BoosterPackException('Balance to low');
             }
         });
+
+        UserBalanceChangedEvent::dispatch($user, $boosterPack, AnalyticAction::BoosterPack, $boosterPack->price);
 
         return $item;
     }
