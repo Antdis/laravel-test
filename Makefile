@@ -1,3 +1,11 @@
+ifneq (,$(wildcard ./.env))
+    include .env
+    export
+else
+    include .env.example
+    export
+endif
+
 help:
 	@echo ""
 	@echo "usage: make COMMAND"
@@ -10,17 +18,18 @@ help:
 	@echo "  build               Build frontend"
 
 init:
-	@make clean
-	@make docker-start
-	@docker-compose exec php composer install
-	cp .env.example .env
-	@docker-compose exec php php artisan key:generate
-	@docker-compose exec php php artisan migrate:install
-	@docker-compose exec php php artisan migrate
-	@docker-compose exec php php artisan db:seed --class=BoosterPackSeeder
-	@docker-compose exec php npm i
-	@docker-compose exec php npm run prod
-	@docker-compose exec php php artisan ide-helper:generate
+	make clean
+	make init-env
+	docker-compose up -d
+	docker-compose exec php composer install
+	docker-compose exec php php artisan key:generate
+	docker-compose exec php php artisan migrate:install
+	docker-compose exec php php artisan migrate
+	docker-compose exec php php artisan db:seed --class=BoosterPackSeeder
+	docker-compose exec php npm i
+	docker-compose exec php npm run prod
+	docker-compose exec php php artisan ide-helper:generate
+	make docker-info
 
 clean:
 	make docker-stop
@@ -29,9 +38,19 @@ clean:
 
 docker-start:
 	docker-compose up -d
+	make docker-info
 
 docker-stop:
 	docker-compose stop
 
 build:
 	docker-compose exec php npm run prod
+
+init-env:
+ifeq (,$(wildcard .env))
+	cp .env.example .env
+endif
+
+docker-info:
+	@echo "Web is available here: $(APP_URL):$(APP_PORT)"
+	@echo "PMA is available here: $(APP_URL):$(PMA_PORT)"
