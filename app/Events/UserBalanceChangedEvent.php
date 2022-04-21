@@ -13,24 +13,19 @@ class UserBalanceChangedEvent
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    /**
-     * @var \App\Models\User
-     */
-    public User           $user;
-    public Model          $object;
-    public AnalyticAction $action;
-    public float          $amount;
+    public User       $user;
+    public Model      $object;
+    public float|null $amount;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(User $user, Model $object, AnalyticAction $action, float $amount)
+    public function __construct(User $user, Model $object, float|null $amount = null)
     {
         $this->user   = $user;
         $this->object = $object;
-        $this->action = $action;
         $this->amount = $amount;
     }
 }

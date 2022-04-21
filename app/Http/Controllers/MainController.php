@@ -73,7 +73,7 @@ class MainController extends Controller
             'wallet_total_refilled' => DB::raw("wallet_total_refilled + $sum"),
         ]);
 
-        UserBalanceChangedEvent::dispatch($user, $user, AnalyticAction::Wallet, $sum);
+        UserBalanceChangedEvent::dispatch($user, $user, $sum);
 
         return response('');
     }

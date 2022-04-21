@@ -6,6 +6,7 @@ use App\Enums\AnalyticAction;
 use App\Events\UserBalanceChangedEvent;
 use App\Exceptions\BoosterPackException;
 use App\Models\BoosterPack;
+use App\Models\BoosterPackInfo;
 use App\Models\Item;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -47,7 +48,11 @@ class BoosterPackService
             }
         });
 
-        UserBalanceChangedEvent::dispatch($user, $boosterPack, AnalyticAction::BoosterPack, $boosterPack->price);
+        $info = BoosterPackInfo::where('item_id', $item->id)
+            ->where('booster_pack_id', $boosterPack->id)
+            ->first();
+
+        UserBalanceChangedEvent::dispatch($user, $info);
 
         return $item;
     }

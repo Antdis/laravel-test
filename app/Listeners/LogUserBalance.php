@@ -2,29 +2,22 @@
 
 namespace App\Listeners;
 
-use App\Enums\AnalyticObject;
 use App\Events\UserBalanceChangedEvent;
-use App\Models\Analytics;
+use App\Models\User;
+use App\Services\AnalyticsService;
 
 class LogUserBalance
 {
-    /**
-     * Handle the event.
-     *
-     * @param \App\Events\UserBalanceChangedEvent $event
-     *
-     * @return void
-     */
+    public function __construct(private readonly AnalyticsService $analyticsService)
+    {
+    }
+
     public function handle(UserBalanceChangedEvent $event): void
     {
-        $analytics = new Analytics();
+        if (!$event->object instanceof User || !$event->amount) {
+            return;
+        }
 
-        $analytics->user_id   = $event->user->id;
-        $analytics->object    = AnalyticObject::fromClass($event->object);
-        $analytics->action    = $event->action;
-        $analytics->object_id = $event->object->getKey();
-        $analytics->amount    = $event->amount;
-
-        $analytics->save();
+        $this->analyticsService->walletLog($event->user, $event->amount);
     }
 }

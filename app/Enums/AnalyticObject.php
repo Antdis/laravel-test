@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 enum AnalyticObject: string
 {
     case BoosterPack = 'boosterpack';
-    case User = 'User';
+    case User = 'user';
 
     public static function fromClass(Model $object): self
     {

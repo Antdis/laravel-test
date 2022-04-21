@@ -4,6 +4,7 @@ namespace App\Enums;
 
 enum AnalyticAction: string
 {
-    case BoosterPack = 'boosterpack';
-    case Wallet = 'wallet';
+    case BoosterPack = 'buy boosterpack';
+    case Wallet = 'wallet refill';
+    case Likes = 'like refill';
 }

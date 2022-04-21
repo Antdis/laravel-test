@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Events\UserBalanceChangedEvent;
+use App\Listeners\LogBoosterPackBuy;
 use App\Listeners\LogUserBalance;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -21,6 +22,7 @@ class EventServiceProvider extends ServiceProvider
         ],
         UserBalanceChangedEvent::class => [
             LogUserBalance::class,
+            LogBoosterPackBuy::class,
         ],
     ];
 
