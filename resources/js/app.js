@@ -92,19 +92,17 @@ var app = new Vue({
                 axios.post(`/posts/${id}/comment`, {commentText: this.commentText})
                     .then(response => {
                         this.post = response.data.post;
-                    });
+                    }).catch(error => this.showError(error.response));
             }
         },
         addLike: function (type, id) {
             axios.post('/like', {type, id})
                 .then(response => {
                     let {post} = response.data;
-                    console.log(post);
                     let postIndex = this.posts.findIndex(post => post.id === id);
-                    console.log(postIndex);
                     this.post = post
                     this.posts[postIndex] = this.post
-                })
+                }).catch(error => this.showError(error.response));
 
         },
         refill: function () {
@@ -115,6 +113,7 @@ var app = new Vue({
 
                 axios.post('/addMoney', {sum: this.addSum})
                     .then(() => setTimeout(() => $('#addModal').modal('hide'), 500))
+                    .catch(error => this.showError(error.response))
             }
         },
         buyPack: function (id) {
@@ -124,13 +123,18 @@ var app = new Vue({
                     if (amount !== 0) {
                         alert(`You won ${amount} likes`);
                     }
-                }).catch(error => this.showError(error.response.data));
+                }).catch(error => this.showError(error.response));
         },
 
         showError(response) {
             let message = '';
 
-            Object.values(response.errors).forEach(element => message += element.join(' '))
+            if (response.status === 422) {
+                Object.values(response.data.errors).forEach(element => message += element.join(' '))
+            } else {
+                message = response.data.message;
+            }
+
             alert(message);
         }
     }

@@ -7,6 +7,7 @@ help:
 	@echo "  init                Cleanup data files and re-init project"
 	@echo "  docker-start        Create and start containers"
 	@echo "  docker-stop         Stop all services"
+	@echo "  build               Build frontend"
 
 init:
 	@make clean
@@ -31,3 +32,6 @@ docker-start:
 
 docker-stop:
 	docker-compose stop
+
+build:
+	docker-compose exec php npm run prod
